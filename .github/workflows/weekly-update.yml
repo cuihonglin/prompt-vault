@@ -1,0 +1,39 @@
+name: Weekly Prompt Update
+
+on:
+  schedule:
+    # 姣忓懆涓€鍖椾含鏃堕棿涓婂崍 9:00 (UTC 1:00) 鑷姩杩愯
+    - cron: '0 1 * * 1'
+  workflow_dispatch: # 鏀寔鎵嬪姩瑙﹀彂
+
+permissions:
+  contents: write
+
+jobs:
+  update-prompt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run weekly prompt update
+        run: node update-prompt.js
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet data.js || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "PromptVault Bot"
+          git config user.email "bot@promptvault.dev"
+          git add data.js
+          git commit -m "馃 Weekly prompt update - $(date +'%Y-%m-%d')"
+          git push
