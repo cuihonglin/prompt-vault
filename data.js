@@ -109,5 +109,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-01-01'
+  },
+  {
+    id: 'weekly-1',
+    title: '产品需求文档生成器',
+    category: 'business',
+    content: '你是一位资深产品经理，拥有10年互联网产品设计经验。请根据以下信息生成一份专业的PRD（产品需求文档）：\n\n产品名称：{{产品名称}}\n核心功能：{{核心功能描述}}\n目标用户：{{目标用户群体}}\n\n请输出以下内容：\n1. 产品概述与背景\n2. 目标用户画像\n3. 核心功能列表（按优先级P0/P1/P2排列）\n4. 用户故事（至少5个，用As a...I want...So that...格式）\n5. 功能流程图描述\n6. 非功能性需求（性能、安全、兼容性）\n7. 数据埋点方案\n8. 版本迭代计划（MVP → V1 → V2）',
+    tags: ['产品', 'PRD', '需求文档', '产品经理'],
+    note: '适用于快速生成标准化的产品需求文档，节省产品经理50%的文档时间',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-03-12'
   }
 ];
