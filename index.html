@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptVault 鈥?AI 鎻愮ず璇嶇鐞嗕笓瀹?/title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>馃</text></svg>">
+<style>
+/* ===== CSS Variables & Themes ===== */
+:root {
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-card: #16213e;
+  --bg-card-hover: #1c2a4a;
+  --bg-input: #1a1a2e;
+  --bg-modal: #16213e;
+  --bg-overlay: rgba(0,0,0,0.6);
+  --text-primary: #e8e8f0;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --border-color: #2d2d5e;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-light: rgba(99,102,241,0.15);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition: 0.2s ease;
+}
+[data-theme="light"] {
+  --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9; --bg-input: #f1f5f9; --bg-modal: #ffffff;
+  --bg-overlay: rgba(0,0,0,0.4); --text-primary: #1e293b;
+  --text-secondary: #64748b; --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  background: var(--bg-primary); color: var(--text-primary);
+  min-height: 100vh; transition: background var(--transition), color var(--transition);
+}
+.header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--bg-secondary);
+  border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100;
+}
+.header-left { display:flex; align-items:center; gap:10px; }
+.logo { font-size:28px; }
+.app-title {
+  font-size:20px; font-weight:700;
+  background:linear-gradient(135deg,var(--accent),#a78bfa);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.app-subtitle { font-size:12px; color:var(--text-muted); margin-left:4px; }
+.header-right { display:flex; align-items:center; gap:12px; }
+.search-box { position:relative; width:280px; }
+.search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-muted); }
+.search-box input {
+  width:100%; padding:8px 12px 8px 36px; background:var(--bg-input);
+  border:1px solid var(--border-color); border-radius:var(--radius-md);
+  color:var(--text-primary); font-size:14px; outline:none;
+  transition:border-color var(--transition);
+}
+.search-box input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.search-box input::placeholder { color:var(--text-muted); }
+.btn {
+  display:inline-flex; align-items:center; gap:6px; padding:8px 16px;
+  border:none; border-radius:var(--radius-sm); font-size:14px;
+  font-weight:500; cursor:pointer; transition:all var(--transition); white-space:nowrap;
+}
+.btn-primary { background:var(--accent); color:white; }
+.btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border-color); }
+.btn-ghost:hover { background:var(--accent-light); color:var(--accent); border-color:var(--accent); }
+.btn-icon { background:transparent; color:var(--text-secondary); padding:8px; border-radius:var(--radius-sm); font-size:20px; line-height:1; border:none; }
+.btn-icon:hover { background:var(--accent-light); color:var(--accent); }
+.btn-sm { padding:4px 10px; font-size:12px; }
+.btn-danger { background:transparent; color:var(--danger); border:1px solid var(--danger); }
+.btn-danger:hover { background:var(--danger); color:white; }
+.main-layout { display:flex; min-height:calc(100vh - 57px); }
+.sidebar {
+  width:220px; background:var(--bg-secondary); border-right:1px solid var(--border-color);
+  padding:16px 0; display:flex; flex-direction:column; justify-content:space-between;
+  position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto;
+}
+.sidebar-title { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); padding:0 16px; margin-bottom:8px; }
+.category-list { list-style:none; }
+.category-item {
+  display:flex; align-items:center; gap:10px; padding:10px 16px;
+  color:var(--text-secondary); cursor:pointer; transition:all var(--transition);
+  font-size:14px; position:relative;
+}
+.category-item:hover { background:var(--accent-light); color:var(--accent); }
+.category-item.active { background:var(--accent-light); color:var(--accent); font-weight:600; }
+.category-item.active::before {
+  content:''; position:absolute; left:0; top:4px; bottom:4px;
+  width:3px; background:var(--accent); border-radius:0 3px 3px 0;
+}
+.category-count {
+  margin-left:auto; background:var(--bg-input); padding:1px 8px;
+  border-radius:10px; font-size:11px; color:var(--text-muted); min-width:20px; text-align:center;
+}
+.sidebar-footer { padding:12px 16px; display:flex; flex-direction:column; gap:6px; border-top:1px solid var(--border-color); }
+.sidebar-footer .btn { justify-content:center; font-size:13px; }
+.content { flex:1; padding:20px 24px; overflow-y:auto; }
+.stats-bar { display:flex; gap:24px; margin-bottom:20px; }
+.stat-item { display:flex; align-items:baseline; gap:6px; }
+.stat-number { font-size:24px; font-weight:700; color:var(--accent); }
+.stat-label { font-size:13px; color:var(--text-muted); }
+.filter-bar { display:flex; align-items:center; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+.filter-label { font-size:13px; color:var(--text-muted); }
+.tag-filters { display:flex; gap:6px; flex-wrap:wrap; }
+.tag-filter {
+  padding:4px 12px; border-radius:20px; font-size:12px; cursor:pointer;
+  background:var(--bg-input); color:var(--text-secondary); border:1px solid var(--border-color);
+  transition:all var(--transition);
+}
+.tag-filter:hover, .tag-filter.active { background:var(--accent-light); color:var(--accent); border-color:var(--accent); }
+.prompt-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+.prompt-card {
+  background:var(--bg-card); border:1px solid var(--border-color);
+  border-radius:var(--radius-lg); padding:20px; transition:all var(--transition);
+  position:relative; display:flex; flex-direction:column; animation:fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.prompt-card:hover { border-color:var(--accent); box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.card-title { font-size:16px; font-weight:600; color:var(--text-primary); line-height:1.4; flex:1; }
+.card-favorite { background:none; border:none; cursor:pointer; font-size:18px; padding:2px; transition:transform var(--transition); }
+.card-favorite:hover { transform:scale(1.2); }
+.card-category {
+  display:inline-flex; align-items:center; gap:4px; font-size:11px;
+  color:var(--accent); background:var(--accent-light); padding:2px 10px;
+  border-radius:20px; margin-bottom:10px; width:fit-content;
+}
+.card-content {
+  font-size:13px; color:var(--text-secondary); line-height:1.6; flex:1;
+  margin-bottom:12px; max-height:100px; overflow:hidden; position:relative;
+  white-space:pre-wrap; word-break:break-word;
+}
+.card-content::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:30px; background:linear-gradient(transparent,var(--bg-card));
+}
+.card-content .variable { color:var(--warning); font-weight:600; background:rgba(245,158,11,0.1); padding:1px 4px; border-radius:3px; }
+.card-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.card-tag { font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg-input); color:var(--text-muted); }
+.card-note {
+  font-size:12px; color:var(--text-muted); font-style:italic; margin-bottom:12px;
+  padding:6px 10px; background:var(--bg-input); border-radius:var(--radius-sm); border-left:3px solid var(--accent);
+}
+.card-actions { display:flex; gap:8px; padding-top:12px; border-top:1px solid var(--border-color); }
+.card-actions .btn { flex:1; justify-content:center; font-size:12px; padding:6px 8px; }
+.card-meta { display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:8px; }
+.empty-state { text-align:center; padding:80px 20px; }
+.empty-icon { font-size:64px; margin-bottom:16px; }
+.empty-state h3 { font-size:20px; color:var(--text-primary); margin-bottom:8px; }
+.empty-state p { color:var(--text-muted); font-size:14px; }
+.modal-overlay {
+  position:fixed; top:0; left:0; right:0; bottom:0; background:var(--bg-overlay);
+  display:none; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(4px);
+}
+.modal-overlay.active { display:flex; }
+.modal {
+  background:var(--bg-modal); border-radius:var(--radius-lg); width:90%; max-width:580px;
+  max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg);
+  border:1px solid var(--border-color); animation:modalIn 0.25s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(0.95) translateY(-10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border-color); }
+.modal-header h2 { font-size:18px; font-weight:600; }
+.modal-close { font-size:24px; color:var(--text-muted); }
+.modal-body { padding:20px 24px; }
+.modal-footer { display:flex; justify-content:flex-end; gap:10px; padding:16px 24px; border-top:1px solid var(--border-color); }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; }
+.required { color:var(--danger); }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; padding:10px 14px; background:var(--bg-input);
+  border:1px solid var(--border-color); border-radius:var(--radius-sm);
+  color:var(--text-primary); font-size:14px; outline:none;
+  transition:border-color var(--transition); font-family:inherit;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.form-group textarea { resize:vertical; min-height:120px; line-height:1.6; }
+.variable-hint {
+  display:flex; align-items:center; gap:6px; margin-top:6px; padding:6px 10px;
+  background:rgba(245,158,11,0.1); border-radius:var(--radius-sm); font-size:12px; color:var(--warning);
+}
+.template-field { margin-bottom:14px; }
+.template-field label { display:block; font-size:13px; font-weight:600; color:var(--warning); margin-bottom:4px; }
+.template-field input {
+  width:100%; padding:8px 12px; background:var(--bg-input);
+  border:1px solid var(--border-color); border-radius:var(--radius-sm);
+  color:var(--text-primary); font-size:14px; outline:none;
+}
+.template-field input:focus { border-color:var(--warning); box-shadow:0 0 0 3px rgba(245,158,11,0.15); }
+.template-preview { padding:16px 24px; border-top:1px solid var(--border-color); }
+.template-preview h4 { font-size:13px; color:var(--text-muted); margin-bottom:8px; }
+.template-preview pre {
+  padding:12px; background:var(--bg-input); border-radius:var(--radius-sm);
+  font-size:13px; color:var(--text-primary); white-space:pre-wrap; word-break:break-word; line-height:1.6;
+}
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px);
+  padding:10px 24px; background:var(--success); color:white; border-radius:var(--radius-md);
+  font-size:14px; font-weight:500; z-index:2000; transition:transform 0.3s ease;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+@media(max-width:768px) {
+  .sidebar { display:none; }
+  .search-box { width:180px; }
+  .prompt-grid { grid-template-columns:1fr; }
+  .header { padding:10px 16px; }
+  .content { padding:16px; }
+  .app-subtitle { display:none; }
+}
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">馃</span>
+      <h1 class="app-title">PromptVault</h1>
+      <span class="app-subtitle">AI 鎻愮ず璇嶇鐞嗕笓瀹?/span>
+    </div>
+    <div class="header-right">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="鎼滅储鎻愮ず璇?.." />
+      </div>
+      <button class="btn btn-primary" id="addPromptBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>
+        鏂板缓鎻愮ず璇?
+      </button>
+      <button class="btn btn-icon" id="themeToggle" title="鍒囨崲涓婚">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="category-nav">
+        <h3 class="sidebar-title">鍒嗙被</h3>
+        <ul class="category-list" id="categoryList">
+          <li class="category-item active" data-category="all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            鍏ㄩ儴
+            <span class="category-count" id="countAll">0</span>
+          </li>
+          <li class="category-item" data-category="writing">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            鍐欎綔
+            <span class="category-count" id="countWriting">0</span>
+          </li>
+          <li class="category-item" data-category="coding">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            缂栫▼
+            <span class="category-count" id="countCoding">0</span>
+          </li>
+          <li class="category-item" data-category="marketing">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            钀ラ攢
+            <span class="category-count" id="countMarketing">0</span>
+          </li>
+          <li class="category-item" data-category="translation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+            缈昏瘧
+            <span class="category-count" id="countTranslation">0</span>
+          </li>
+          <li class="category-item" data-category="business">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            鍟嗗姟
+            <span class="category-count" id="countBusiness">0</span>
+          </li>
+          <li class="category-item" data-category="image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            AI缁樼敾
+            <span class="category-count" id="countImage">0</span>
+          </li>
+          <li class="category-item" data-category="other">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            鍏朵粬
+            <span class="category-count" id="countOther">0</span>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost" id="exportBtn">馃摛 瀵煎嚭鏁版嵁</button>
+        <button class="btn btn-ghost" id="importBtn">馃摜 瀵煎叆鏁版嵁</button>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number" id="totalPrompts">0</span>
+          <span class="stat-label">鎬绘彁绀鸿瘝</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="totalFavorites">0</span>
+          <span class="stat-label">宸叉敹钘?/span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="totalCopied">0</span>
+          <span class="stat-label">鎬诲鍒舵鏁?/span>
+        </div>
+      </div>
+
+      <!-- Filter Tags -->
+      <div class="filter-bar">
+        <span class="filter-label">鏍囩绛涢€夛細</span>
+        <div class="tag-filters" id="tagFilters">
+          <span class="tag-filter active" data-tag="all">鍏ㄩ儴</span>
+        </div>
+      </div>
+
+      <!-- Prompt Cards Grid -->
+      <div class="prompt-grid" id="promptGrid"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display:none">
+        <div class="empty-icon">馃</div>
+        <h3>杩樻病鏈夋彁绀鸿瘝</h3>
+        <p>鐐瑰嚮鍙充笂瑙掋€屾柊寤烘彁绀鸿瘝銆嶅紑濮嬩綘鐨?AI 鎻愮ず璇嶇鐞嗕箣鏃?/p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Add/Edit Prompt -->
+  <div class="modal-overlay" id="promptModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">鏂板缓鎻愮ず璇?/h2>
+        <button class="btn btn-icon modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>鏍囬 <span class="required">*</span></label>
+          <input type="text" id="promptTitle" placeholder="缁欎綘鐨勬彁绀鸿瘝璧蜂釜鍚嶅瓧" maxlength="50" />
+        </div>
+        <div class="form-group">
+          <label>鍒嗙被</label>
+          <select id="promptCategory">
+            <option value="writing">鍐欎綔</option>
+            <option value="coding">缂栫▼</option>
+            <option value="marketing">钀ラ攢</option>
+            <option value="translation">缈昏瘧</option>
+            <option value="business">鍟嗗姟</option>
+            <option value="image">AI缁樼敾</option>
+            <option value="other">鍏朵粬</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>鎻愮ず璇嶅唴瀹?<span class="required">*</span></label>
+          <textarea id="promptContent" rows="8" placeholder="杈撳叆浣犵殑鎻愮ず璇嶅唴瀹?..&#10;&#10;馃挕 浣跨敤 {{鍙橀噺鍚峿} 鍒涘缓鍙～鍏呯殑鍙橀噺妯℃澘&#10;渚嬪锛氳灏嗕互涓媨{璇█}}鏂囨湰缈昏瘧鎴恵{鐩爣璇█}}锛歿{鏂囨湰鍐呭}}"></textarea>
+          <div class="variable-hint" id="variableHint" style="display:none">
+            <span class="hint-icon">馃挕</span>
+            <span>妫€娴嬪埌鍙橀噺锛?/span>
+            <span id="detectedVars"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>鏍囩</label>
+          <input type="text" id="promptTags" placeholder="鐢ㄩ€楀彿鍒嗛殧澶氫釜鏍囩锛屽锛氱炕璇?鑻辫,鍟嗗姟" />
+        </div>
+        <div class="form-group">
+          <label>澶囨敞锛堝彲閫夛級</label>
+          <input type="text" id="promptNote" placeholder="浣跨敤鍦烘櫙銆佹敞鎰忎簨椤圭瓑" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modalCancel">鍙栨秷</button>
+        <button class="btn btn-primary" id="modalSave">淇濆瓨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Use Template -->
+  <div class="modal-overlay" id="templateModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>濉厖妯℃澘鍙橀噺</h2>
+        <button class="btn btn-icon modal-close" id="templateModalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="templateFields"></div>
+      <div class="modal-footer">
+        <div class="template-preview-toggle">
+          <button class="btn btn-ghost" id="previewTemplateBtn">馃憗 棰勮</button>
+        </div>
+        <button class="btn btn-ghost" id="templateCancel">鍙栨秷</button>
+        <button class="btn btn-primary" id="templateCopy">澶嶅埗鐢熸垚鐨勬彁绀鸿瘝</button>
+      </div>
+      <div class="template-preview" id="templatePreview" style="display:none">
+        <h4>棰勮缁撴灉锛?/h4>
+        <pre id="previewContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+<script>
+// ===== Built-in Community Prompts =====
+const BUILTIN_PROMPTS = [
+  {
+    id: 'builtin-1',
+    title: 'AI 鍐欎綔娑﹁壊澶у笀',
+    category: 'writing',
+    content: '浣犳槸涓€浣嶄笓涓氱殑涓枃鍐欎綔娑﹁壊涓撳銆傝瀵逛互涓嬫枃鏈繘琛屾鼎鑹蹭紭鍖栵紝瑕佹眰锛歕n1. 淇濇寔鍘熸剰涓嶅彉\n2. 鎻愬崌鏂囧瓧鐨勬祦鐣呭害鍜岃〃杈惧姏\n3. 淇璇硶閿欒\n4. 浼樺寲鍙ュ紡缁撴瀯\n5. 鏍囨敞浣犲仛浜嗗摢浜涗慨鏀瑰強鐞嗙敱\n\n鍘熸枃锛歕n{{寰呮鼎鑹叉枃鏈瑌}',
+    tags: ['鍐欎綔', '娑﹁壊', '涓枃'],
+    note: '閫傜敤浜庢枃绔犮€侀偖浠躲€佹姤鍛婄瓑鍚勭被鏂囨湰鐨勬鼎鑹蹭紭鍖?,
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-2',
+    title: '楂樼骇浠ｇ爜瀹℃煡鍛?,
+    category: 'coding',
+    content: '浣犳槸涓€浣嶆嫢鏈?0骞寸粡楠岀殑楂樼骇杞欢宸ョ▼甯堬紝璇峰浠ヤ笅{{缂栫▼璇█}}浠ｇ爜杩涜璇︾粏鐨凜ode Review锛歕n\n```\n{{浠ｇ爜鍐呭}}\n```\n\n璇蜂粠浠ヤ笅缁村害杩涜瀹℃煡锛歕n1. 浠ｇ爜璐ㄩ噺鍜屽彲璇绘€n2. 娼滃湪鐨凚ug鍜岃竟鐣屾儏鍐礬n3. 鎬ц兘浼樺寲寤鸿\n4. 瀹夊叏鎬ч棶棰榎n5. 鏈€浣冲疄璺靛缓璁甛n\n璇蜂互琛ㄦ牸褰㈠紡杈撳嚭闂鍒楄〃锛屽寘鍚細闂浣嶇疆銆佷弗閲嶇▼搴︼紙楂?涓?浣庯級銆侀棶棰樻弿杩般€佷慨澶嶅缓璁€?,
+    tags: ['缂栫▼', 'Code Review', '浠ｇ爜璐ㄩ噺'],
+    note: '鏀寔浠绘剰缂栫▼璇█鐨勪唬鐮佸鏌?,
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-3',
+    title: '灏忕孩涔︾垎娆炬枃妗?,
+    category: 'marketing',
+    content: '浣犳槸涓€浣嶅皬绾功鐖嗘鍐呭鍒涗綔鑰呫€傝鏍规嵁浠ヤ笅涓婚锛屽垱浣滀竴绡囧皬绾功椋庢牸鐨勭鑽夋枃妗堬細\n\n涓婚锛歿{浜у搧鎴栬瘽棰榼}\n鐩爣浜虹兢锛歿{鐩爣鍙椾紬}}\n\n瑕佹眰锛歕n1. 鏍囬锛氫娇鐢╡moji + 鍚哥潧鏍囬锛屼笉瓒呰繃20瀛梊n2. 姝ｆ枃锛?00瀛椾互鍐咃紝鍒嗘娓呮櫚\n3. 璇皵锛氫翰鍒囥€佺湡瀹炪€佹湁鎰熸煋鍔沑n4. 鍔犲叆3-5涓簰鍔ㄨ瘽棰樻爣绛綷n5. 缁撳熬璁剧疆浜掑姩寮曞璇璡n6. 浣跨敤閫傚綋鐨別moji瑁呴グ',
+    tags: ['钀ラ攢', '灏忕孩涔?, '鏂囨', '绉嶈崏'],
+    note: '閫傜敤浜庝骇鍝佺鑽夈€佺敓娲诲垎浜€佸ソ鐗╂帹鑽愮瓑鍦烘櫙',
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-4',
+    title: '涓撲笟澶氳瑷€缈昏瘧',
+    category: 'translation',
+    content: '浣犳槸涓€浣嶇簿閫氬鍥借瑷€鐨勪笓涓氱炕璇戯紝鎿呴暱{{婧愯瑷€}}鍒皗{鐩爣璇█}}鐨勭炕璇戙€傝缈昏瘧浠ヤ笅鍐呭锛歕n\n{{寰呯炕璇戝唴瀹箎}\n\n缈昏瘧瑕佹眰锛歕n1. 鍑嗙‘浼犺揪鍘熸枃鍚箟锛屼笉閬楁紡淇℃伅\n2. 绗﹀悎鐩爣璇█鐨勮〃杈句範鎯拰璇硶瑙勮寖\n3. 淇濇寔鍘熸枃鐨勮姘斿拰椋庢牸\n4. 涓撲笟鏈浣跨敤琛屼笟鏍囧噯璇戞硶\n5. 濡傛湁鏂囧寲宸紓锛岃鍦ㄦ嫭鍙蜂腑娉ㄩ噴璇存槑\n\n璇疯緭鍑猴細\n- 缈昏瘧缁撴灉\n- 鍏抽敭鏈瀵圭収琛╘n- 缈昏瘧闅剧偣璇存槑锛堝鏈夛級',
+    tags: ['缈昏瘧', '澶氳瑷€', '涓撲笟'],
+    note: '鏀寔涓嫳鏃ラ煩娉曞痉瑗跨瓑澶氳瑷€浜掕瘧',
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-5',
+    title: '鍟嗗姟閭欢鎾板啓',
+    category: 'business',
+    content: '璇峰府鎴戞挵鍐欎竴灏佷笓涓氱殑鍟嗗姟閭欢锛歕n\n鏀朵欢浜鸿韩浠斤細{{鏀朵欢浜簘}\n閭欢鐩殑锛歿{鐩殑}}\n鍏抽敭淇℃伅锛歿{鍏抽敭鍐呭}}\n璇皵瑕佹眰锛歿{姝ｅ紡/鍙嬪ソ/绱ф€}\n\n瑕佹眰锛歕n1. 绗﹀悎鍟嗗姟閭欢绀间华\n2. 缁撴瀯娓呮櫚锛堥棶鍊?姝ｆ枃-琛屽姩瑕佹眰-缁撳熬锛塡n3. 璇█涓撲笟寰椾綋\n4. 鎺у埗鍦?00瀛椾互鍐匼n5. 鍚屾椂杈撳嚭涓枃鍜岃嫳鏂囦袱涓増鏈?,
+    tags: ['鍟嗗姟', '閭欢', '鑱屽満'],
+    note: '閫傜敤浜庡伐浣滀腑鍚勭被鍟嗗姟閭欢鍦烘櫙',
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-6',
+    title: 'Midjourney 鎻愮ず璇嶇敓鎴?,
+    category: 'image',
+    content: '浣犳槸涓€浣岮I缁樼敾鎻愮ず璇嶄笓瀹讹紝绮鹃€歁idjourney鐨勬彁绀鸿瘝缂栧啓銆傝鏍规嵁浠ヤ笅鎻忚堪鐢熸垚楂樿川閲忕殑Midjourney鎻愮ず璇嶏細\n\n鐢婚潰鎻忚堪锛歿{鐢婚潰鎻忚堪}}\n椋庢牸鍋忓ソ锛歿{椋庢牸锛屽璧涘崥鏈嬪厠/姘村僵/娌圭敾/鍐欏疄}}\n\n璇风敓鎴愶細\n1. 鑻辨枃涓绘彁绀鸿瘝锛堝寘鍚富浣撱€佸満鏅€佸厜褰便€佺粏鑺傛弿杩帮級\n2. 椋庢牸鍙傛暟锛?-ar, --v, --s, --q 绛夛級\n3. 3涓笉鍚岄鏍肩殑鍙樹綋鐗堟湰\n4. 涓枃鍚箟瑙ｉ噴\n\n鏍煎紡锛歕n/imagine prompt: [鎻愮ず璇峕 --鍙傛暟',
+    tags: ['AI缁樼敾', 'Midjourney', '鎻愮ず璇?],
+    note: '蹇€熺敓鎴愰珮璐ㄩ噺鐨凙I缁樼敾鎻愮ず璇?,
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-7',
+    title: 'SQL 鏌ヨ鐢熸垚鍣?,
+    category: 'coding',
+    content: '浣犳槸涓€浣嶆暟鎹簱涓撳銆傝鏍规嵁浠ヤ笅鑷劧璇█鎻忚堪鐢熸垚SQL鏌ヨ璇彞锛歕n\n鏁版嵁搴撶被鍨嬶細{{MySQL/PostgreSQL/SQLite}}\n琛ㄧ粨鏋勬弿杩帮細{{琛ㄧ粨鏋剗}\n鏌ヨ闇€姹傦細{{鑷劧璇█鎻忚堪鐨勬煡璇㈤渶姹倉}\n\n璇疯緭鍑猴細\n1. SQL鏌ヨ璇彞锛堝甫娉ㄩ噴锛塡n2. 鏌ヨ閫昏緫瑙ｉ噴\n3. 鎬ц兘浼樺寲寤鸿锛堝鏈夌储寮曞缓璁級\n4. 濡傛灉闇€姹傛ā绯婏紝鍒楀嚭浣犵殑鍋囪',
+    tags: ['缂栫▼', 'SQL', '鏁版嵁搴?],
+    note: '鐢ㄨ嚜鐒惰瑷€鐢熸垚SQL鏌ヨ',
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-8',
+    title: '鍛ㄦ姤/鏃ユ姤鐢熸垚鍣?,
+    category: 'business',
+    content: '璇锋牴鎹互涓嬪伐浣滃唴瀹癸紝甯垜鐢熸垚涓€浠絳{鍛ㄦ姤/鏃ユ姤}}锛歕n\n鏈懆宸ヤ綔鍐呭锛堝叧閿瘝鍗冲彲锛夛細\n{{宸ヤ綔鍐呭}}\n\n涓嬪懆璁″垝锛歕n{{璁″垝}}\n\n瑕佹眰锛歕n1. 缁撴瀯鍖栬緭鍑猴紙鏈懆瀹屾垚/杩涜涓?涓嬪懆璁″垝锛塡n2. 鐢ㄩ噺鍖栨暟鎹弿杩板伐浣滄垚鏋淺n3. 璇皵涓撲笟銆佺畝娲乗n4. 绐佸嚭閲嶇偣宸ヤ綔鍜屾垚鏋淺n5. 绡囧箙閫備腑锛屼笉瓒呰繃500瀛?,
+    tags: ['鑱屽満', '鍛ㄦ姤', '鏁堢巼'],
+    note: '蹇€熷皢纰庣墖鍖栫殑宸ヤ綔鍐呭缁勭粐鎴愪笓涓氬懆鎶?,
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-9',
+    title: '闈㈣瘯闂鍑嗗',
+    category: 'business',
+    content: '鎴戝嵆灏嗗弬鍔爗{鍏徃鍚嶇О}}鐨剓{鑱屼綅鍚嶇О}}闈㈣瘯銆傝甯垜鍑嗗锛歕n\n1. 杩欎釜鑱屼綅鏈€鍙兘琚棶鍒扮殑10涓潰璇曢棶棰榎n2. 姣忎釜闂鐨勫洖绛旀鏋讹紙STAR娉曞垯锛塡n3. 3涓垜搴旇鍙嶉棶闈㈣瘯瀹樼殑楂樿川閲忛棶棰榎n4. 璇ュ叕鍙?琛屼笟鐨勫叧閿煡璇嗙偣\n5. 甯歌鐨勮涓洪潰璇曢櫡闃卞強搴斿绛栫暐\n\n鎴戠殑鑳屾櫙锛歿{绠€瑕佽儗鏅瘆}\n鎴戠殑浼樺娍锛歿{鏍稿績浼樺娍}}',
+    tags: ['鑱屽満', '闈㈣瘯', '姹傝亴'],
+    note: '蹇€熷噯澶囬潰璇曪紝鎻愰珮闈㈣瘯閫氳繃鐜?,
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  },
+  {
+    id: 'builtin-10',
+    title: '瀛︿範璁″垝鍒跺畾',
+    category: 'other',
+    content: '浣犳槸涓€浣嶅涔犺鍒掍笓瀹躲€傝甯垜鍒跺畾涓€浠藉涔犺鍒掞細\n\n瀛︿範鐩爣锛歿{瀛︿範鐩爣}}\n褰撳墠姘村钩锛歿{褰撳墠姘村钩}}\n鍙敤鏃堕棿锛氭瘡澶﹞{鍙敤灏忔椂鏁皚}灏忔椂\n鏈熸湜鍛ㄦ湡锛歿{鍛ㄦ湡锛屽3涓湀}}\n\n璇疯緭鍑猴細\n1. 鍒嗛樁娈靛涔犺矾绾垮浘\n2. 姣忓懆璇︾粏璁″垝琛╘n3. 鎺ㄨ崘瀛︿範璧勬簮锛堜功绫?璇剧▼/缃戠珯锛塡n4. 閲岀▼纰戝拰妫€楠屾爣鍑哱n5. 甯歌璇尯鍜岄伩鍧戝缓璁?,
+    tags: ['瀛︿範', '瑙勫垝', '鑷垜鎻愬崌'],
+    note: '閫傜敤浜庝换浣曟妧鑳界殑绯荤粺瀛︿範瑙勫垝',
+    favorite: false, copyCount: 0, createdAt: '2026-01-01'
+  }
+];
+</script>
+<script>
+// ===== PromptVault Core Application Logic =====
+(function () {
+  'use strict';
+  const STORAGE_KEY = 'promptvault_prompts';
+  const THEME_KEY = 'promptvault_theme';
+  const COPY_COUNT_KEY = 'promptvault_total_copies';
+  const CATEGORY_NAMES = {
+    all: '鍏ㄩ儴', writing: '鍐欎綔', coding: '缂栫▼', marketing: '钀ラ攢',
+    translation: '缈昏瘧', business: '鍟嗗姟', image: 'AI缁樼敾', other: '鍏朵粬'
+  };
+  let prompts = [];
+  let currentCategory = 'all';
+  let currentTag = 'all';
+  let searchQuery = '';
+  let editingId = null;
+  let totalCopied = parseInt(localStorage.getItem(COPY_COUNT_KEY) || '0', 10);
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+  const promptGrid = $('#promptGrid');
+  const emptyState = $('#emptyState');
+  const searchInput = $('#searchInput');
+  const categoryList = $('#categoryList');
+  const tagFilters = $('#tagFilters');
+  const promptModal = $('#promptModal');
+  const templateModal = $('#templateModal');
+  const toast = $('#toast');
+  const totalPromptsEl = $('#totalPrompts');
+  const totalFavoritesEl = $('#totalFavorites');
+  const totalCopiedEl = $('#totalCopied');
+  const modalTitle = $('#modalTitle');
+  const promptTitle = $('#promptTitle');
+  const promptCategory = $('#promptCategory');
+  const promptContent = $('#promptContent');
+  const promptTags = $('#promptTags');
+  const promptNote = $('#promptNote');
+  const variableHint = $('#variableHint');
+  const detectedVars = $('#detectedVars');
+  function init() { loadPrompts(); loadTheme(); render(); bindEvents(); }
+  function loadPrompts() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) { prompts = JSON.parse(stored); }
+    else { prompts = BUILTIN_PROMPTS.map(p => ({ ...p })); savePrompts(); }
+  }
+  function savePrompts() { localStorage.setItem(STORAGE_KEY, JSON.stringify(prompts)); }
+  function generateId() { return 'pv-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6); }
+  function loadTheme() {
+    const theme = localStorage.getItem(THEME_KEY) || 'dark';
+    if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    updateThemeIcon(theme);
+  }
+  function toggleTheme() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const newTheme = isLight ? 'dark' : 'light';
+    if (newTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem(THEME_KEY, newTheme);
+    updateThemeIcon(newTheme);
+  }
+  function updateThemeIcon(theme) {
+    const icon = $('#themeIcon');
+    if (theme === 'light') {
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    } else {
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+  }
+  function getFilteredPrompts() {
+    let result = [...prompts];
+    if (currentCategory !== 'all') result = result.filter(p => p.category === currentCategory);
+    if (currentTag !== 'all') result = result.filter(p => p.tags && p.tags.includes(currentTag));
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(p =>
+        p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q) ||
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(q))) ||
+        (p.note && p.note.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }
+  function getAllTags() {
+    const tagSet = new Set();
+    prompts.forEach(p => { if (p.tags) p.tags.forEach(t => tagSet.add(t)); });
+    return Array.from(tagSet).sort();
+  }
+  function render() { renderStats(); renderCategories(); renderTags(); renderCards(); }
+  function renderStats() {
+    totalPromptsEl.textContent = prompts.length;
+    totalFavoritesEl.textContent = prompts.filter(p => p.favorite).length;
+    totalCopiedEl.textContent = totalCopied;
+  }
+  function renderCategories() {
+    const counts = { all: prompts.length };
+    Object.keys(CATEGORY_NAMES).forEach(cat => {
+      if (cat !== 'all') counts[cat] = prompts.filter(p => p.category === cat).length;
+    });
+    categoryList.querySelectorAll('.category-item').forEach(item => {
+      const cat = item.dataset.category;
+      item.classList.toggle('active', cat === currentCategory);
+      const countEl = item.querySelector('.category-count');
+      if (countEl) countEl.textContent = counts[cat] || 0;
+    });
+  }
+  function renderTags() {
+    const allTags = getAllTags();
+    tagFilters.innerHTML = '<span class="tag-filter' + (currentTag === 'all' ? ' active' : '') + '" data-tag="all">鍏ㄩ儴</span>';
+    allTags.forEach(tag => {
+      tagFilters.innerHTML += '<span class="tag-filter' + (currentTag === tag ? ' active' : '') + '" data-tag="' + escapeHtml(tag) + '">' + escapeHtml(tag) + '</span>';
+    });
+    tagFilters.querySelectorAll('.tag-filter').forEach(el => {
+      el.addEventListener('click', () => { currentTag = el.dataset.tag; render(); });
+    });
+  }
+  function renderCards() {
+    const filtered = getFilteredPrompts();
+    if (filtered.length === 0) {
+      promptGrid.style.display = 'none'; emptyState.style.display = 'block';
+      if (searchQuery || currentCategory !== 'all' || currentTag !== 'all') {
+        emptyState.querySelector('h3').textContent = '娌℃湁鎵惧埌鍖归厤鐨勬彁绀鸿瘝';
+        emptyState.querySelector('p').textContent = '璇曡瘯璋冩暣鎼滅储鍏抽敭璇嶆垨绛涢€夋潯浠?;
+      } else {
+        emptyState.querySelector('h3').textContent = '杩樻病鏈夋彁绀鸿瘝';
+        emptyState.querySelector('p').textContent = '鐐瑰嚮鍙充笂瑙掋€屾柊寤烘彁绀鸿瘝銆嶅紑濮嬩綘鐨?AI 鎻愮ず璇嶇鐞嗕箣鏃?;
+      }
+      return;
+    }
+    promptGrid.style.display = 'grid'; emptyState.style.display = 'none';
+    promptGrid.innerHTML = filtered.map(p => createCardHtml(p)).join('');
+    promptGrid.querySelectorAll('.card-copy-btn').forEach(btn => { btn.addEventListener('click', () => handleCopy(btn.dataset.id)); });
+    promptGrid.querySelectorAll('.card-template-btn').forEach(btn => { btn.addEventListener('click', () => handleTemplate(btn.dataset.id)); });
+    promptGrid.querySelectorAll('.card-edit-btn').forEach(btn => { btn.addEventListener('click', () => handleEdit(btn.dataset.id)); });
+    promptGrid.querySelectorAll('.card-delete-btn').forEach(btn => { btn.addEventListener('click', () => handleDelete(btn.dataset.id)); });
+    promptGrid.querySelectorAll('.card-favorite').forEach(btn => { btn.addEventListener('click', () => handleFavorite(btn.dataset.id)); });
+  }
+  function createCardHtml(prompt) {
+    const hasVars = /\{\{.+?\}\}/.test(prompt.content);
+    const contentDisplay = highlightVariables(escapeHtml(prompt.content));
+    const catName = CATEGORY_NAMES[prompt.category] || prompt.category;
+    const favIcon = prompt.favorite ? '猸? : '鈽?;
+    const tagsHtml = (prompt.tags || []).map(t => '<span class="card-tag">' + escapeHtml(t) + '</span>').join('');
+    const noteHtml = prompt.note ? '<div class="card-note">馃挕 ' + escapeHtml(prompt.note) + '</div>' : '';
+    const templateBtn = hasVars ? '<button class="btn btn-ghost btn-sm card-template-btn" data-id="' + prompt.id + '">馃敡 濉厖鍙橀噺</button>' : '';
+    return '<div class="prompt-card" data-id="' + prompt.id + '">' +
+      '<div class="card-header"><span class="card-title">' + escapeHtml(prompt.title) + '</span>' +
+      '<button class="card-favorite" data-id="' + prompt.id + '" title="鏀惰棌">' + favIcon + '</button></div>' +
+      '<span class="card-category">' + catName + '</span>' +
+      '<div class="card-content">' + contentDisplay + '</div>' +
+      (tagsHtml ? '<div class="card-tags">' + tagsHtml + '</div>' : '') + noteHtml +
+      '<div class="card-meta"><span>澶嶅埗 ' + (prompt.copyCount || 0) + ' 娆?/span><span>' + (prompt.createdAt || '') + '</span></div>' +
+      '<div class="card-actions"><button class="btn btn-primary btn-sm card-copy-btn" data-id="' + prompt.id + '">馃搵 澶嶅埗</button>' +
+      templateBtn + '<button class="btn btn-ghost btn-sm card-edit-btn" data-id="' + prompt.id + '">鉁忥笍 缂栬緫</button>' +
+      '<button class="btn btn-danger btn-sm card-delete-btn" data-id="' + prompt.id + '">馃棏锔?/button></div></div>';
+  }
+  function highlightVariables(text) { return text.replace(/\{\{(.+?)\}\}/g, '<span class="variable">{{$1}}</span>'); }
+  function handleCopy(id) {
+    const prompt = prompts.find(p => p.id === id); if (!prompt) return;
+    copyToClipboard(prompt.content);
+    prompt.copyCount = (prompt.copyCount || 0) + 1; totalCopied++;
+    localStorage.setItem(COPY_COUNT_KEY, totalCopied.toString());
+    savePrompts(); render(); showToast('鉁?宸插鍒跺埌鍓创鏉匡紒');
+  }
+  function handleFavorite(id) {
+    const prompt = prompts.find(p => p.id === id); if (!prompt) return;
+    prompt.favorite = !prompt.favorite; savePrompts(); render();
+    showToast(prompt.favorite ? '猸?宸叉敹钘? : '鍙栨秷鏀惰棌');
+  }
+  function handleEdit(id) {
+    const prompt = prompts.find(p => p.id === id); if (!prompt) return;
+    editingId = id; modalTitle.textContent = '缂栬緫鎻愮ず璇?;
+    promptTitle.value = prompt.title; promptCategory.value = prompt.category;
+    promptContent.value = prompt.content; promptTags.value = (prompt.tags || []).join(', ');
+    promptNote.value = prompt.note || ''; detectVariables(); openModal(promptModal);
+  }
+  function handleDelete(id) {
+    if (!confirm('纭畾瑕佸垹闄よ繖鏉℃彁绀鸿瘝鍚楋紵')) return;
+    prompts = prompts.filter(p => p.id !== id); savePrompts(); render(); showToast('馃棏锔?宸插垹闄?);
+  }
+  function handleSave() {
+    const title = promptTitle.value.trim(); const content = promptContent.value.trim();
+    if (!title) { showToast('鈿狅笍 璇疯緭鍏ユ爣棰?, 'warning'); promptTitle.focus(); return; }
+    if (!content) { showToast('鈿狅笍 璇疯緭鍏ユ彁绀鸿瘝鍐呭', 'warning'); promptContent.focus(); return; }
+    const tags = promptTags.value.split(/[,锛宂/).map(t => t.trim()).filter(Boolean);
+    const now = new Date().toISOString().slice(0, 10);
+    if (editingId) {
+      const prompt = prompts.find(p => p.id === editingId);
+      if (prompt) { prompt.title = title; prompt.category = promptCategory.value; prompt.content = content; prompt.tags = tags; prompt.note = promptNote.value.trim(); }
+    } else {
+      prompts.unshift({ id: generateId(), title, category: promptCategory.value, content, tags, note: promptNote.value.trim(), favorite: false, copyCount: 0, createdAt: now });
+    }
+    savePrompts(); closeModal(promptModal); resetForm(); render();
+    showToast(editingId ? '鉁?宸叉洿鏂? : '鉁?宸插垱寤?); editingId = null;
+  }
+  function handleTemplate(id) {
+    const prompt = prompts.find(p => p.id === id); if (!prompt) return;
+    const vars = extractVariables(prompt.content);
+    if (vars.length === 0) { handleCopy(id); return; }
+    const fieldsContainer = $('#templateFields');
+    fieldsContainer.innerHTML = vars.map(v =>
+      '<div class="template-field"><label>{{' + escapeHtml(v) + '}}</label>' +
+      '<input type="text" data-var="' + escapeHtml(v) + '" placeholder="杈撳叆 ' + escapeHtml(v) + '" /></div>'
+    ).join('');
+    templateModal.dataset.promptId = id;
+    $('#templatePreview').style.display = 'none'; openModal(templateModal);
+    const firstInput = fieldsContainer.querySelector('input');
+    if (firstInput) setTimeout(() => firstInput.focus(), 100);
+  }
+  function getFilledTemplate() {
+    const id = templateModal.dataset.promptId;
+    const prompt = prompts.find(p => p.id === id); if (!prompt) return '';
+    let result = prompt.content;
+    templateModal.querySelectorAll('.template-field input').forEach(input => {
+      const varName = input.dataset.var;
+      const value = input.value || '{{' + varName + '}}';
+      result = result.replace(new RegExp('\\{\\{' + escapeRegex(varName) + '\\}\\}', 'g'), value);
+    });
+    return result;
+  }
+  function handleTemplateCopy() {
+    const filled = getFilledTemplate(); copyToClipboard(filled);
+    const id = templateModal.dataset.promptId;
+    const prompt = prompts.find(p => p.id === id);
+    if (prompt) { prompt.copyCount = (prompt.copyCount || 0) + 1; totalCopied++; localStorage.setItem(COPY_COUNT_KEY, totalCopied.toString()); savePrompts(); }
+    closeModal(templateModal); render(); showToast('鉁?宸插鍒跺～鍏呭悗鐨勬彁绀鸿瘝锛?);
+  }
+  function handleTemplatePreview() {
+    const previewEl = $('#templatePreview'); const previewContent = $('#previewContent');
+    const isVisible = previewEl.style.display !== 'none';
+    if (isVisible) { previewEl.style.display = 'none'; }
+    else { previewContent.textContent = getFilledTemplate(); previewEl.style.display = 'block'; }
+  }
+  function extractVariables(content) {
+    const matches = content.match(/\{\{(.+?)\}\}/g);
+    if (!matches) return [];
+    return [...new Set(matches.map(m => m.slice(2, -2)))];
+  }
+  function detectVariables() {
+    const content = promptContent.value; const vars = extractVariables(content);
+    if (vars.length > 0) { variableHint.style.display = 'flex'; detectedVars.textContent = vars.map(v => '{{' + v + '}}').join('  '); }
+    else { variableHint.style.display = 'none'; }
+  }
+  function handleExport() {
+    const data = { version: 1, exportedAt: new Date().toISOString(), prompts };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = 'promptvault-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click(); URL.revokeObjectURL(url); showToast('馃摛 鏁版嵁宸插鍑?);
+  }
+  function handleImport(event) {
+    const file = event.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const importedPrompts = data.prompts || data;
+        if (!Array.isArray(importedPrompts)) { showToast('鈿狅笍 鏃犳晥鐨勬暟鎹牸寮?, 'warning'); return; }
+        const count = importedPrompts.length;
+        if (confirm('鍗冲皢瀵煎叆 ' + count + ' 鏉℃彁绀鸿瘝锛屾槸鍚︾户缁紵\n锛堝凡鏈夋暟鎹笉浼氳瑕嗙洊锛?)) {
+          const existingIds = new Set(prompts.map(p => p.id));
+          const newPrompts = importedPrompts.filter(p => !existingIds.has(p.id));
+          prompts = [...newPrompts, ...prompts]; savePrompts(); render();
+          showToast('鉁?鎴愬姛瀵煎叆 ' + newPrompts.length + ' 鏉℃柊鎻愮ず璇?);
+        }
+      } catch (err) { showToast('鈿狅笍 鏂囦欢瑙ｆ瀽澶辫触', 'warning'); }
+    };
+    reader.readAsText(file); event.target.value = '';
+  }
+  function openModal(modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeModal(modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
+  function resetForm() {
+    promptTitle.value = ''; promptCategory.value = 'writing'; promptContent.value = '';
+    promptTags.value = ''; promptNote.value = ''; variableHint.style.display = 'none';
+    editingId = null; modalTitle.textContent = '鏂板缓鎻愮ず璇?;
+  }
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    else fallbackCopy(text);
+  }
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea'); textarea.value = text;
+    textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+    document.body.appendChild(textarea); textarea.select();
+    document.execCommand('copy'); document.body.removeChild(textarea);
+  }
+  function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
+  function escapeHtml(str) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return String(str).replace(/[&<>"']/g, c => map[c]);
+  }
+  function escapeRegex(str) { return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  function bindEvents() {
+    $('#themeToggle').addEventListener('click', toggleTheme);
+    searchInput.addEventListener('input', (e) => { searchQuery = e.target.value; renderCards(); });
+    categoryList.querySelectorAll('.category-item').forEach(item => {
+      item.addEventListener('click', () => { currentCategory = item.dataset.category; currentTag = 'all'; render(); });
+    });
+    $('#addPromptBtn').addEventListener('click', () => { resetForm(); openModal(promptModal); setTimeout(() => promptTitle.focus(), 100); });
+    $('#modalClose').addEventListener('click', () => { closeModal(promptModal); resetForm(); });
+    $('#modalCancel').addEventListener('click', () => { closeModal(promptModal); resetForm(); });
+    $('#modalSave').addEventListener('click', handleSave);
+    promptModal.addEventListener('click', (e) => { if (e.target === promptModal) { closeModal(promptModal); resetForm(); } });
+    promptContent.addEventListener('input', detectVariables);
+    $('#templateModalClose').addEventListener('click', () => closeModal(templateModal));
+    $('#templateCancel').addEventListener('click', () => closeModal(templateModal));
+    $('#templateCopy').addEventListener('click', handleTemplateCopy);
+    $('#previewTemplateBtn').addEventListener('click', handleTemplatePreview);
+    templateModal.addEventListener('click', (e) => { if (e.target === templateModal) closeModal(templateModal); });
+    $('#exportBtn').addEventListener('click', handleExport);
+    $('#importBtn').addEventListener('click', () => $('#importFile').click());
+    $('#importFile').addEventListener('change', handleImport);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (promptModal.classList.contains('active')) { closeModal(promptModal); resetForm(); }
+        if (templateModal.classList.contains('active')) closeModal(templateModal);
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchInput.focus(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); resetForm(); openModal(promptModal); setTimeout(() => promptTitle.focus(), 100); }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
