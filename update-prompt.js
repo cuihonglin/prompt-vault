@@ -11,8 +11,8 @@ const BASE_DIR = __dirname;
 const WEEKLY_FILE = path.join(BASE_DIR, 'weekly-prompts.json');
 const DATA_FILE = path.join(BASE_DIR, 'data.js');
 
-// 项目启动日期（第1周的周一）—— 2026-03-16 是部署后的第一个周一
-const START_DATE = new Date('2026-03-16T00:00:00Z');
+// 项目启动日期（第1周的周一）—— 2026-03-09 是当前周的周一
+const START_DATE = new Date('2026-03-09T00:00:00Z');
 
 /**
  * 计算当前是第几周（从 START_DATE 算起）
