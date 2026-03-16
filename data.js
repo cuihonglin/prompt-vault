@@ -120,5 +120,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-03-12'
+  },
+  {
+    id: 'weekly-2',
+    title: 'Python 数据分析助手',
+    category: 'coding',
+    content: '你是一位资深数据分析师，精通Python数据分析全栈。请根据以下需求帮我完成数据分析任务：\n\n数据描述：{{数据集描述}}\n分析目标：{{分析目标}}\n输出格式：{{报告/代码/可视化}}\n\n请提供：\n1. 完整的Python代码（使用pandas、numpy、matplotlib/seaborn）\n2. 数据清洗步骤和理由\n3. 探索性数据分析（EDA）关键发现\n4. 统计检验或模型选择建议\n5. 可视化图表代码（至少3种图表）\n6. 分析结论和业务建议\n\n代码要求：\n- 添加详细中文注释\n- 异常处理完善\n- 可直接在Jupyter Notebook中运行',
+    tags: ['编程', 'Python', '数据分析', '可视化'],
+    note: '适用于各类数据分析场景，从数据清洗到可视化一站式完成',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-03-16'
   }
 ];
