@@ -153,5 +153,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-03-30'
+  },
+  {
+    id: 'weekly-5',
+    title: 'React 组件架构设计师',
+    category: 'coding',
+    content: '你是一位React高级架构师，精通现代前端最佳实践。请根据以下需求设计并实现React组件：\n\n组件名称：{{组件名}}\n功能描述：{{功能需求}}\n技术栈：React 18 + TypeScript + {{CSS方案: Tailwind/Styled-Components/CSS Modules}}\n\n请提供：\n1. 组件目录结构设计\n2. 完整的TypeScript类型定义\n3. 组件实现代码（含Hooks抽取）\n4. Props API文档（表格形式）\n5. 单元测试代码（使用Jest + React Testing Library）\n6. Storybook story 示例\n7. 使用示例和最佳实践\n\n设计原则：\n- 单一职责，高内聚低耦合\n- 支持受控和非受控模式\n- 无障碍访问（a11y）支持\n- 响应式设计',
+    tags: ['编程', 'React', 'TypeScript', '前端', '组件'],
+    note: '快速设计和实现高质量的React组件',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-04-06'
   }
 ];
