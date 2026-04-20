@@ -175,5 +175,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-04-13'
+  },
+  {
+    id: 'weekly-7',
+    title: '个人知识管理系统设计',
+    category: 'other',
+    content: '你是一位知识管理专家，精通第二大脑（Second Brain）和卡片笔记法。请帮我设计一套个人知识管理系统：\n\n我的职业：{{职业}}\n主要学习领域：{{学习领域}}\n目前使用的工具：{{如Notion/Obsidian/Logseq/飞书}}\n每日可用时间：{{时间}}\n\n请输出：\n1. 知识管理工作流设计（输入→处理→输出）\n2. 文件夹/标签分类体系（PARA或其他方法论）\n3. 每日/每周知识管理SOP\n4. 模板设计（阅读笔记、会议笔记、项目笔记、灵感记录）\n5. 知识复盘机制（间隔重复系统）\n6. 从知识到输出的转化路径\n7. 工具配置建议和自动化方案',
+    tags: ['效率', '知识管理', '第二大脑', '笔记'],
+    note: '帮助建立系统化的知识管理体系，告别碎片化学习',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-04-20'
   }
 ];
