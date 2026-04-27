@@ -186,5 +186,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-04-20'
+  },
+  {
+    id: 'weekly-8',
+    title: 'API 接口文档生成器',
+    category: 'coding',
+    content: '你是一位后端技术文档专家。请根据以下信息生成标准的RESTful API接口文档：\n\n项目名称：{{项目名}}\n接口描述：{{接口功能}}\n技术栈：{{如Node.js/Spring Boot/Go/Python}}\n\n请输出完整的API文档，包含：\n1. 接口概览（Base URL、版本、认证方式）\n2. 接口详情（每个接口包含）：\n   - 请求方法和URL\n   - 请求头\n   - 请求参数（Query/Body/Path，含类型、是否必填、说明）\n   - 请求示例\n   - 响应结构（含状态码、字段说明）\n   - 响应示例（成功和失败）\n   - 错误码说明\n3. 数据模型定义\n4. 通用错误码表\n5. 调用示例（cURL + JavaScript fetch + Python requests）\n6. 接口变更记录',
+    tags: ['编程', 'API', '文档', '后端'],
+    note: '快速生成标准化API文档，支持各种后端技术栈',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-04-27'
   }
 ];
