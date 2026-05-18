@@ -219,5 +219,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-05-11'
+  },
+  {
+    id: 'weekly-11',
+    title: 'Stable Diffusion 精准提示词',
+    category: 'image',
+    content: '你是一位AI绘画提示词工程师，精通Stable Diffusion的提示词语法和各种模型特性。请根据以下需求生成精准的SD提示词：\n\n画面描述：{{画面描述}}\n画风：{{写实/动漫/插画/3D/油画/水墨}}\n用途：{{壁纸/头像/海报/概念设计}}\n\n请生成：\n1. 正向提示词（Positive Prompt）—— 按权重排序\n   - 主体描述\n   - 画质增强词\n   - 光影描述\n   - 风格描述\n   - 细节补充\n2. 负向提示词（Negative Prompt）\n3. 推荐参数：\n   - 采样方法（Sampler）\n   - 采样步数（Steps）\n   - CFG Scale\n   - 图片尺寸\n   - 推荐模型/LoRA\n4. 3个风格变体版本\n5. 中文含义逐词解释\n\n使用加权语法：(keyword:1.2) 表示增加权重',
+    tags: ['AI绘画', 'Stable Diffusion', '提示词', 'AIGC'],
+    note: '比Midjourney更精确的SD提示词生成，含参数推荐',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-05-18'
   }
 ];
