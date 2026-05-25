@@ -230,5 +230,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-05-18'
+  },
+  {
+    id: 'weekly-12',
+    title: 'Git 工作流问题诊断',
+    category: 'coding',
+    content: '你是一位Git专家和DevOps工程师。请帮我解决Git相关问题：\n\n问题描述：{{遇到的Git问题}}\n当前分支状态：{{分支信息}}\n操作系统：{{Windows/Mac/Linux}}\n\n请提供：\n1. 问题原因分析\n2. 解决方案（按推荐顺序排列）\n3. 每个方案的具体命令（带详细注释）\n4. 操作前的安全备份建议\n5. 如何避免类似问题的最佳实践\n6. 相关Git概念解释（用图表说明）\n\n常见问题覆盖：\n- 合并冲突解决\n- 误提交回退\n- 分支管理策略\n- rebase vs merge\n- 大文件处理\n- 子模块管理',
+    tags: ['编程', 'Git', '版本控制', 'DevOps'],
+    note: 'Git疑难杂症一站式诊断和解决',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-05-25'
   }
 ];
