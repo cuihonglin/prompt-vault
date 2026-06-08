@@ -252,5 +252,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-06-01'
+  },
+  {
+    id: 'weekly-14',
+    title: 'PPT 演讲稿自动排版',
+    category: 'writing',
+    content: '你是一位演讲稿和PPT设计专家。请将以下内容转化为PPT演讲稿：\n\n主题：{{演讲主题}}\n场景：{{会议汇报/产品发布/课程培训/TED演讲}}\n时长：{{预计演讲时间}}\n风格：{{专业严肃/轻松幽默/启发思考}}\n\n核心内容：\n{{关键要点}}\n\n请输出：\n1. PPT结构大纲（每页标题 + 要点）\n2. 每页PPT的：\n   - 页面标题\n   - 核心内容（3-5个要点）\n   - 视觉建议（图表/图片/图标建议）\n   - 演讲者备注（逐字稿）\n3. 开场设计（钩子/故事/数据）\n4. 过渡语句\n5. 结尾CTA（行动号召）\n6. 预计每页停留时间\n7. Q&A环节准备（预判5个可能的提问）',
+    tags: ['写作', 'PPT', '演讲', '汇报'],
+    note: '从零到一快速生成专业演讲稿和PPT内容',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-06-08'
   }
 ];
