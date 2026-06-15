@@ -263,5 +263,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-06-08'
+  },
+  {
+    id: 'weekly-15',
+    title: 'Docker 容器化部署方案',
+    category: 'coding',
+    content: '你是一位Docker和云原生专家。请为以下项目设计容器化部署方案：\n\n项目类型：{{Web应用/微服务/API服务/数据库}}\n技术栈：{{使用的技术}}\n运行环境：{{开发/测试/生产}}\n特殊需求：{{如持久化存储/网络隔离/资源限制}}\n\n请提供：\n1. Dockerfile（多阶段构建，带详细注释）\n2. docker-compose.yml（完整的多服务编排）\n3. .dockerignore 文件\n4. 环境变量管理方案\n5. 网络和数据卷配置\n6. 健康检查配置\n7. 生产环境优化建议（镜像瘦身、安全加固）\n8. CI/CD 集成指南\n9. 常见问题排查清单\n10. 一键启动脚本',
+    tags: ['编程', 'Docker', '部署', 'DevOps', '容器'],
+    note: '从开发到生产的完整Docker化方案',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-06-15'
   }
 ];
