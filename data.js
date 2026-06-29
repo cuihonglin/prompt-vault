@@ -285,5 +285,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-06-22'
+  },
+  {
+    id: 'weekly-17',
+    title: 'JSON/YAML 数据转换器',
+    category: 'coding',
+    content: '你是一位数据格式处理专家。请帮我进行数据格式转换和处理：\n\n操作类型：{{JSON转YAML / YAML转JSON / JSON Schema生成 / 数据验证 / 格式美化}}\n\n输入数据：\n```\n{{粘贴你的数据}}\n```\n\n请提供：\n1. 转换后的数据（格式化输出）\n2. 数据结构分析（字段类型、嵌套层级）\n3. JSON Schema 定义（如适用）\n4. 数据校验报告（格式错误、类型不匹配等）\n5. 相关的编程语言处理代码：\n   - Python版\n   - JavaScript版\n   - Go版\n6. 常见问题修复建议\n\n支持的转换：\nJSON ↔ YAML ↔ TOML ↔ XML ↔ CSV',
+    tags: ['编程', 'JSON', 'YAML', '数据格式', '工具'],
+    note: '各种数据格式的互相转换和校验',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-06-29'
   }
 ];
