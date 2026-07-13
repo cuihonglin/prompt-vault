@@ -307,5 +307,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-07-06'
+  },
+  {
+    id: 'weekly-19',
+    title: '正则表达式生成与调试',
+    category: 'coding',
+    content: '你是一位正则表达式大师。请根据以下需求生成正则表达式：\n\n匹配目标：{{需要匹配的内容描述}}\n编程语言：{{JavaScript/Python/Java/Go/PHP}}\n\n测试用例：\n- 应匹配：{{示例1}}\n- 不应匹配：{{示例2}}\n\n请提供：\n1. 正则表达式（带详细的逐段解释）\n2. 可视化图解（用文字描述匹配流程）\n3. 各编程语言的使用示例代码\n4. 边界情况分析\n5. 性能注意事项（回溯风险、贪婪vs惰性）\n6. 3个不同严格程度的变体：\n   - 宽松版（尽量匹配）\n   - 标准版（推荐）\n   - 严格版（精确匹配）\n7. 在线测试链接推荐',
+    tags: ['编程', '正则表达式', 'Regex', '工具'],
+    note: '从需求到代码的正则表达式全流程解决方案',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-07-13'
   }
 ];
