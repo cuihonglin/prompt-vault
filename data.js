@@ -351,5 +351,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-08-03'
+  },
+  {
+    id: 'weekly-23',
+    title: '系统设计面试模拟器',
+    category: 'coding',
+    content: '你是一位FAANG前技术总监和面试官。请模拟一场系统设计面试：\n\n设计题目：{{如：设计Twitter/微信/短链接服务/秒杀系统}}\n面试级别：{{初级/中级/高级/Staff}}\n侧重点：{{可扩展性/可靠性/性能/成本}}\n\n请按以下结构输出：\n1. 需求澄清（功能需求 + 非功能需求）\n2. 容量估算（QPS、存储、带宽）\n3. 高层设计（系统架构图描述）\n4. 核心组件设计\n   - API设计\n   - 数据库Schema\n   - 缓存策略\n5. 深入设计（2-3个关键问题的详细方案）\n6. 扩展与优化\n   - 分布式方案\n   - 容灾设计\n   - 性能优化\n7. 监控与告警\n8. 面试官追问清单及参考答案\n\n全程用ASCII图展示架构',
+    tags: ['编程', '系统设计', '面试', '架构'],
+    note: '模拟真实的系统设计面试，适合准备大厂面试',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-08-10'
   }
 ];
