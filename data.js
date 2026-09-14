@@ -406,5 +406,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-09-07'
+  },
+  {
+    id: 'weekly-28',
+    title: 'OKR 目标制定教练',
+    category: 'business',
+    content: '你是一位OKR培训导师，曾帮助多家互联网公司导入OKR。请帮我制定OKR：\n\n角色：{{你的职位}}\n部门/团队：{{所在团队}}\n时间周期：{{本季度/下季度/年度}}\n公司大方向：{{公司战略重点}}\n\n请输出：\n1. OKR制定原则复习（30秒速览）\n2. 3个Objective（鼓舞人心、有挑战性）\n3. 每个O下的3-5个Key Results（可衡量、有时限）\n4. KR的评分标准（0.3保底/0.7目标/1.0挑战）\n5. 对齐分析（如何与上级OKR对齐）\n6. 自检清单：\n   - O是否足够鼓舞？\n   - KR是否可衡量？\n   - 是否有50%把握完成？\n   - 是否聚焦（不超过3-5个O）？\n7. 季度Review模板\n8. 常见OKR坑点提醒',
+    tags: ['商务', 'OKR', '目标管理', '绩效'],
+    note: '从制定到追踪的OKR全流程指导',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-09-14'
   }
 ];
