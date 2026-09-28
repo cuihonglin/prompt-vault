@@ -428,5 +428,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-09-21'
+  },
+  {
+    id: 'weekly-30',
+    title: 'Linux 服务器运维排障',
+    category: 'coding',
+    content: '你是一位资深Linux运维工程师。请帮我排查以下服务器问题：\n\n问题现象：{{描述问题}}\n操作系统：{{Ubuntu/CentOS/Debian版本}}\n运行的服务：{{如Nginx/MySQL/Redis/Docker}}\n最近做过的变更：{{如果有}}\n\n请提供：\n1. 排查思路（流程图）\n2. 诊断命令清单（按排查顺序）\n   - 系统资源检查（CPU/内存/磁盘/网络）\n   - 进程状态检查\n   - 日志分析命令\n   - 网络连通性测试\n3. 常见原因分析（按可能性排序）\n4. 解决方案（每个可能原因对应）\n5. 临时应急措施\n6. 根本性修复方案\n7. 监控预警配置建议\n8. 运维最佳实践（如何避免再次发生）',
+    tags: ['编程', 'Linux', '运维', '服务器', '排障'],
+    note: 'Linux服务器问题系统化排查和解决',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-09-28'
   }
 ];
