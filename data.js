@@ -450,5 +450,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-10-05'
+  },
+  {
+    id: 'weekly-32',
+    title: '数据库性能优化顾问',
+    category: 'coding',
+    content: '你是一位DBA数据库专家。请帮我优化以下数据库性能问题：\n\n数据库类型：{{MySQL/PostgreSQL/MongoDB/Redis}}\n问题描述：{{慢查询/连接池耗尽/死锁/数据量大}}\n表结构/查询语句：\n```sql\n{{相关SQL}}\n```\n数据量级：{{大约多少条数据}}\n\n请提供：\n1. 问题诊断\n   - EXPLAIN分析（如提供了SQL）\n   - 执行计划解读\n   - 瓶颈定位\n2. 索引优化方案\n   - 建议添加/删除的索引\n   - 索引设计原则\n3. SQL改写建议\n4. 表结构优化\n5. 参数调优建议（关键配置项）\n6. 分库分表方案（如数据量需要）\n7. 缓存策略\n8. 监控指标和告警阈值建议',
+    tags: ['编程', '数据库', '性能优化', 'SQL', 'DBA'],
+    note: '从SQL到架构层面的数据库性能全面优化',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-10-12'
   }
 ];
