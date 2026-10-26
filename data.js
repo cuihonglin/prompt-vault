@@ -472,5 +472,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-10-19'
+  },
+  {
+    id: 'weekly-34',
+    title: '科技论文英文摘要撰写',
+    category: 'writing',
+    content: '你是一位SCI期刊编辑和学术英语写作专家。请帮我撰写论文的英文摘要：\n\n学科领域：{{学科}}\n论文标题：{{中文标题}}\n研究内容概要：{{研究做了什么}}\n主要发现：{{核心结论}}\n目标期刊：{{期刊名称，如有}}\n\n请输出：\n1. 结构化摘要（Background-Methods-Results-Conclusions，250词内）\n2. 非结构化摘要版本（150词内）\n3. 关键词（5-8个，中英对照）\n4. 摘要中英对照（逐句翻译）\n5. 学术用语替换建议表\n6. 符合目标期刊风格的调整建议\n7. 常见审稿人关注点提醒\n\n写作标准：\n- 使用被动语态为主\n- 避免第一人称\n- 数据呈现准确\n- 逻辑紧密连贯',
+    tags: ['写作', '学术', '论文', '英文摘要', 'SCI'],
+    note: '帮助研究者撰写高质量的英文学术摘要',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-10-26'
   }
 ];
