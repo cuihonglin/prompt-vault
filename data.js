@@ -483,5 +483,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-10-26'
+  },
+  {
+    id: 'weekly-35',
+    title: 'Kubernetes 集群管理助手',
+    category: 'coding',
+    content: '你是一位Kubernetes专家和CKA认证工程师。请帮我解决以下K8s问题：\n\n问题类型：{{部署/扩容/网络/存储/监控/故障排查}}\n集群环境：{{本地/EKS/GKE/AKS/自建}}\n问题描述：{{详细描述}}\n当前配置：\n```yaml\n{{相关YAML配置}}\n```\n\n请提供：\n1. 问题分析\n2. 解决方案（含完整YAML配置）\n3. kubectl 排查命令集\n4. 最佳实践建议：\n   - 资源限制配置\n   - 健康检查配置\n   - HPA自动扩缩容\n   - 网络策略\n   - RBAC权限配置\n5. 监控和告警配置（Prometheus + Grafana）\n6. 灾难恢复方案\n7. 成本优化建议',
+    tags: ['编程', 'Kubernetes', 'K8s', '云原生', 'DevOps'],
+    note: 'K8s集群从部署到运维的全方位指导',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-11-02'
   }
 ];
