@@ -494,5 +494,16 @@ const BUILTIN_PROMPTS = [
     favorite: false,
     copyCount: 0,
     createdAt: '2026-11-02'
+  },
+  {
+    id: 'weekly-36',
+    title: '用户增长实验设计',
+    category: 'marketing',
+    content: '你是一位增长黑客和A/B测试专家。请帮我设计一个用户增长实验：\n\n产品：{{产品名称和类型}}\n当前指标：{{DAU/转化率/留存率等}}\n增长目标：{{目标指标}}\n实验周期：{{预计周期}}\n\n请输出：\n1. 增长机会分析（使用海盗指标AARRR框架）\n2. 实验假设（If...Then...Because...格式）\n3. 实验方案设计：\n   - 实验组vs对照组\n   - 变量控制\n   - 样本量计算\n   - 统计显著性要求\n4. 实验实施步骤\n5. 数据埋点方案\n6. 成功/失败判断标准\n7. 实验报告模板\n8. 3个备选增长实验方案\n9. 增长飞轮设计',
+    tags: ['营销', '增长', 'A/B测试', '数据驱动'],
+    note: '科学设计增长实验，用数据驱动用户增长',
+    favorite: false,
+    copyCount: 0,
+    createdAt: '2026-11-09'
   }
 ];
